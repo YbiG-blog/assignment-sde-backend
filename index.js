@@ -40,6 +40,9 @@ app.get("/", (req, res) => {
   res.status(200).json({ success: true, message: "Apis working are working." });
 });
 
+// routes
+app.use("/api/v1", require("./src/routes"));
+
 app.listen(PORT, () => {
   logInfo(`Server running on port ${PORT}`);
 });
