@@ -104,7 +104,7 @@ Make sure you have the following installed on your machine:
     npm run dev
 
 
-    ## Project Overview
+### Project Overview
 
 The **SPYNE_SDE_BACKEND_ASSIGNMENT** is a backend service designed to process image data from CSV files. Users can upload CSV files containing product information and image URLs. The system processes these images asynchronously, compressing them by 50% using the Sharp library, and stores the compressed images in an AWS S3 bucket. CSV input is validated using Joi, and the status of image processing is tracked in MongoDB.
 
@@ -121,6 +121,7 @@ Additionally, the service provides a webhook mechanism, notifying clients when i
 
 
 ## API Endpoints
+`https://assignment-sde-backend.onrender.com/`
 
 ### 1. Upload CSV
 - **Method**: POST  
@@ -135,6 +136,7 @@ Additionally, the service provides a webhook mechanism, notifying clients when i
       "inputImageUrls": "https://m.media-amazon.com/images/I/31iq8ieIg1L._SL500_.jpg,https://m.media-amazon.com/images/I/41z8hQ172xL._SL500_.jpg,https://m.media-amazon.com/images/I/51GhHsiXCvL._SL500_.jpg"
     }
   ]
+```
 
 ### 2. Check Processing Status
 - **Method**: GET  
@@ -150,3 +152,8 @@ Additionally, the service provides a webhook mechanism, notifying clients when i
 - **Method**: POST  
 - **Endpoint**: `/api/v1/webhook/image-processing`  
 - **Description**: Webhook for receiving notifications when image processing is completed.
+
+### Postman Collection
+
+`https://documenter.getpostman.com/view/32081765/2sAXxQdrbj`
+
