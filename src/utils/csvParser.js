@@ -1,18 +1,16 @@
 const streamifier = require("streamifier");
 const csv = require("csv-parser");
-const { Buffer } = require("safe-buffer");
-const { logInfo } = require("../config/winston");
 
 /**
- * Parses the uploaded CSV file
- * @param fileData - CSV file data
- * @returns {Promise<Array>} - Parsed CSV rows
+ *
+ * @param {Object} file - File object
+ * @returns {Promise} - Returns a promise
+ * @description Parses the CSV file
+ *
  */
-
 const csvParser = async (file) => {
   return new Promise((resolve, reject) => {
     const results = [];
-
     streamifier
       .createReadStream(file.buffer)
       .pipe(csv())
@@ -20,11 +18,10 @@ const csvParser = async (file) => {
         results.push(row);
       })
       .on("end", () => {
-        logInfo(results); // parsed CSV rowsx
         resolve(results);
       })
       .on("error", (error) => {
-        console.error("Error processing CSV file:", error);
+        logError("Error processing CSV file:", error);
         reject(error);
       });
   });
