@@ -16,10 +16,17 @@ const processCSV = async (parsedData, fileName) => {
   const requestId = await generateUniqueId();
 
   // Step : 2 - Crea File entry in the database
+  const status = parsedData.length ? "processing" : "no-products";
   const file = await new File({
     fileName,
     requestId,
+    status,
   }).save();
+
+  // Step : 2.1 - If no products are found, return the requestId
+  if (status === "no-products") {
+    return requestId;
+  }
 
   // Step : 3 - Prepare the product data
   const products = parsedData.map((item) => ({
@@ -39,7 +46,7 @@ const processCSV = async (parsedData, fileName) => {
     })
   );
 
-  // // Step : 5 Upload the compressed images to AWS - S3
+  // Step : 5 Upload the compressed images to AWS - S3
   const uploadedImageUrls = await Promise.all(
     compressedImageBuffer?.map(async (product) => {
       const compressedImages = product.compressedImages;
@@ -62,6 +69,7 @@ const processCSV = async (parsedData, fileName) => {
       fileId: file._id,
     };
   });
+
   // Step : 7 - Save the updated products to the database
   const saveData = await Product.insertMany(updatedProducts);
 

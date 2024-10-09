@@ -7,7 +7,7 @@ const fileSchema = new Schema(
     requestId: { type: String, required: true, unique: true },
     status: {
       type: String,
-      enum: ["processing", "completed", "failed"],
+      enum: ["processing", "completed", "failed", "no-products"],
       default: "processing",
     },
     products: [
