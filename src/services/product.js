@@ -3,6 +3,8 @@ const { generateUniqueId } = require("../utils/product");
 const { compressImage } = require("../services/sharp");
 const { uploadFileToS3Bucket } = require("../services/s3Bucket");
 
+const { webhookAxios } = require("../config/axios");
+
 /**
  *
  * @param parsedData - Parsed CSV data
@@ -79,6 +81,15 @@ const processCSV = async (parsedData, fileName) => {
     { status: "completed", products: saveData.map((item) => item._id) }
   );
 
+  // Step : 9 - Send the webhook
+  webhookAxios
+    .post("/image-processing", {
+      requestId,
+      status: "completed",
+    })
+    .catch((error) => {
+      console.error("Webhook request failed", error?.message);
+    });
   return requestId;
 };
 
