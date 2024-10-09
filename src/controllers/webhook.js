@@ -13,7 +13,7 @@ const { WEBHOOK_API_KEY } = process.env;
 const imageProcessingWebhook = async (req, res) => {
   try {
     const apiKey = req.headers["x-api-key"];
-    if (apiKey !== "WEBHOOK_API_KEY") {
+    if (apiKey !== WEBHOOK_API_KEY) {
       return res
         .status(401)
         .json(
