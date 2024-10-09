@@ -6,6 +6,8 @@ const { processCSV } = require("../services/product");
 const { responseMessage, responseTemplate } = require("../utils/response");
 const { csvParser } = require("../utils/csvParser");
 const { productFileType } = require("../utils/constant");
+// validators
+const { uploadSchema } = require("../validators/joi");
 
 /**
  *
@@ -32,20 +34,31 @@ const uploadCSV = async (req, res) => {
     }
     // Step : 2 - Parse the CSV file
     const parsedData = await csvParser(file);
+    await uploadSchema.validateAsync(parsedData);
 
     // Step : 3 - Process the CSV data
     const fileName = `${Date.now()}_upload`;
-    const requesId = await processCSV(parsedData, fileName);
+    const requestId = await processCSV(parsedData, fileName);
 
     // Step : 4 - Send the response
     const response = {
       success: true,
       message: "CSV file uploaded successfully",
-      data: { request_id: requesId },
+      data: { request_id: requestId },
     };
     return res.status(201).json(response);
   } catch (error) {
     logError(error);
+    if (error?.isJoi) {
+      return res.status(400).json(
+        await responseTemplate(
+          false,
+          "Validation error",
+          null,
+          error?.details?.map((detail) => detail?.message)
+        )
+      );
+    }
     return res
       .status(500)
       .json(
